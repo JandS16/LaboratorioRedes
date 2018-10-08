@@ -257,5 +257,116 @@ public class Brain {
         }
         return resultado;
     }
+    
+    public static boolean HayError(String dividendo, String divisor, String ceros) {//Comprueba Si una CodeWord tiene error
+        String residuo = dividendo.substring(0, divisor.length());
+        for (int i = 0; i <= dividendo.length() - divisor.length(); i++) { //se realiza la division
+
+            if (residuo.startsWith("1")) { //si el residuo empieza por 1 el XOR se debe realizar con el divisor, de lo contrario con la cadena de 0's
+                //System.out.println("Entro en 1");
+                residuo = XOR(residuo.substring(1), divisor.substring(1));
+                //System.out.println("Residuo XOR=" + residuo);
+            } else {
+                //System.out.println("Entro en 0");
+                residuo = XOR(residuo.substring(1), ceros.substring(1));
+                //System.out.println("Residuo XOR=" + residuo);
+            }
+            if (i != dividendo.length() - divisor.length()) {
+                residuo = residuo + dividendo.substring(divisor.length() + i, divisor.length() + i + 1); //Baja el siguiente digito para que quede de la misma longitud que el divisor 
+            }
+        }
+        System.out.println("Residuo: " + residuo);
+        if (residuo.equals(ceros.substring(1))) {
+            return false;
+        } else {
+            System.out.println("Si hubo error");
+            return true;
+        }
+    }
+
+    public static void GetInfo(File f) {//Comprueba que cada Codeword del .crc no tenga error
+        String line;
+        try {
+            FileReader fr = new FileReader(f.getAbsolutePath());
+            BufferedReader br = new BufferedReader(fr);
+            line = br.readLine();
+            AsignarPolinomioGenerador(line);
+            String ceros = "";
+            for (int i = 0; i < Generador.length(); i++) {
+                ceros = ceros + "0";
+            }
+            line = br.readLine();
+            String text = "";
+            boolean NoHayError= true;
+            while (line != null && NoHayError) {
+                if (HayError(line, Generador, ceros)) {
+                    NoHayError=false;
+                    System.out.println("Hay un error en el mensaje.");
+                }else{
+                    text=text+GetText(line,Generador.length()-1);                    
+                }
+                line = br.readLine();
+            }
+            br.close();
+            fr.close();
+            if (NoHayError) {
+                System.out.println(text);
+                String nombre = NombreS.substring(0, NombreS.length() - 4);
+                CreateTxt(text,nombre);
+            }
+        } catch (IOException e) {
+            System.out.println("Error en GetInfo");
+        }
+    }
+
+    public static String GetText(String codewordCero, int n) {//n debe ser la longitud del generador MENOS 1
+        String a, a1, c, c1;
+        int b, b1;
+        String text = "";
+        String codeword = codewordCero.substring(0, codewordCero.length() - n);
+        for (int i = 0; i < codeword.length() / 4; i = 2 + i) {
+            a = codeword.substring(4 * i, 4 * (i + 1));
+            a1 = codeword.substring(4 * (i + 1), 4 * (i + 2));
+            b = Integer.parseInt(a, 2);
+            b1 = Integer.parseInt(a1, 2);
+            c = Integer.toHexString(b);
+            c1 = Integer.toHexString(b1);
+            text = text + hexToAscii(c + c1);
+        }
+        return text;
+    }
+
+    private static String hexToAscii(String hexStr) {
+        StringBuilder output = new StringBuilder("");
+
+        for (int i = 0; i < hexStr.length(); i += 2) {
+            String str = hexStr.substring(i, i + 2);
+            output.append((char) Integer.parseInt(str, 16));
+        }
+
+        return output.toString();
+    }
+    
+    public static void CreateTxt(String text, String nombre) { // Le mando el generador, el CodeWord y el nombre del archivo que el usuario escogió
+        File Archivo;
+        FileWriter w;
+        BufferedWriter bw;
+        PrintWriter wr;
+        Archivo = new File("C:\\ArchivosTxt\\" + nombre + ".txt"); // Crea el archivo en la direccion dada con el nombre escogido
+        try {
+            if (Archivo.createNewFile()) { // Verifica que el archivo se haya creado exitosamente
+                w = new FileWriter(Archivo); // Se prepara para escribir en el archivo
+                bw = new BufferedWriter(w);
+                wr = new PrintWriter(bw);
+                wr.write(text);
+                wr.close();
+                bw.close();
+                System.out.println("Se ha creado exitosamente el archivo salida");
+            }
+        } catch (IOException e) {
+            System.out.println("Ha habido un error creando el Archivo");
+        }
+    }
+
 
 }

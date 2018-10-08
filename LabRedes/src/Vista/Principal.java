@@ -103,7 +103,7 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8_Delete_24px_1.png"))); // NOI18N
-        jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel7MouseClicked(evt);
@@ -131,7 +131,7 @@ public class Principal extends javax.swing.JFrame {
         continueBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         continueBt.setText("Continuar");
         continueBt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(69, 133, 175), 2));
-        continueBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        continueBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         continueBt.setOpaque(true);
         continueBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -155,7 +155,7 @@ public class Principal extends javax.swing.JFrame {
         selectFileBtn.setForeground(new java.awt.Color(255, 255, 255));
         selectFileBtn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         selectFileBtn.setText("Seleccionar");
-        selectFileBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        selectFileBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         selectFileBtn.setOpaque(true);
         selectFileBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -262,7 +262,7 @@ public class Principal extends javax.swing.JFrame {
         recibirDetBt.setForeground(new java.awt.Color(255, 255, 255));
         recibirDetBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         recibirDetBt.setText("Recibir");
-        recibirDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        recibirDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         recibirDetBt.setOpaque(true);
         recibirDetBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -276,7 +276,7 @@ public class Principal extends javax.swing.JFrame {
         selectFileDetBt.setForeground(new java.awt.Color(255, 255, 255));
         selectFileDetBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         selectFileDetBt.setText("Seleccionar");
-        selectFileDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        selectFileDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         selectFileDetBt.setOpaque(true);
         selectFileDetBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -306,7 +306,7 @@ public class Principal extends javax.swing.JFrame {
         enviarDetBt.setForeground(new java.awt.Color(255, 255, 255));
         enviarDetBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         enviarDetBt.setText("Enviar");
-        enviarDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        enviarDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         enviarDetBt.setOpaque(true);
         enviarDetBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -355,7 +355,7 @@ public class Principal extends javax.swing.JFrame {
         recibirCorBt.setForeground(new java.awt.Color(255, 255, 255));
         recibirCorBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         recibirCorBt.setText("Recibir");
-        recibirCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        recibirCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         recibirCorBt.setOpaque(true);
         recibirCorBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -369,7 +369,7 @@ public class Principal extends javax.swing.JFrame {
         selectFileCorBt.setForeground(new java.awt.Color(255, 255, 255));
         selectFileCorBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         selectFileCorBt.setText("Seleccionar");
-        selectFileCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        selectFileCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         selectFileCorBt.setOpaque(true);
         selectFileCorBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -394,7 +394,7 @@ public class Principal extends javax.swing.JFrame {
         enviarCorBt.setForeground(new java.awt.Color(255, 255, 255));
         enviarCorBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         enviarCorBt.setText("Enviar");
-        enviarCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        enviarCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         enviarCorBt.setOpaque(true);
         enviarCorBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
