@@ -4,8 +4,12 @@ import Controlador.Brain;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -17,6 +21,7 @@ public class Principal extends javax.swing.JFrame {
     String generador;
     String nombreFile;
     File f;
+    File fileham;
     File fileid3;
 
     /**
@@ -436,9 +441,11 @@ public class Principal extends javax.swing.JFrame {
 
     private void selectFileBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectFileBtnMouseClicked
         try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             JFileChooser chooser = new JFileChooser();
             chooser.showOpenDialog(null);
             f = chooser.getSelectedFile();
+            fileham = f;
             nombreFile = f.getName();
             String extension = nombreFile.substring(nombreFile.length() - 4, nombreFile.length());
             if (!extension.contains(".txt")) {
@@ -446,11 +453,20 @@ public class Principal extends javax.swing.JFrame {
                 f = null;
             } else {
                 Brain.AsignarNombreSalida(nombreFile);
+                Brain.AsignarPath(f.getPath());
                 pathTx.setText(f.getPath());
                 pathCorTx.setText(f.getPath());
             }
         } catch (NullPointerException n) { //en caso de no haber seleccionado archivo
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_selectFileBtnMouseClicked
@@ -500,16 +516,28 @@ public class Principal extends javax.swing.JFrame {
     private void enviarDetBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enviarDetBtMouseClicked
         try {
             generador = generadorTf.getText();
-            Brain.AsignarPolinomioGenerador(generador);
-            Identificador = 1;
-            if (Brain.VerificarArchivo(f) == true) {
-                Brain.GetInfo(f, Identificador);
+            char x;
+            int n = 0;
+            for (int i = 0; i < generador.length(); i++) {
+                x = generador.charAt(i);
+                if (x != '1' && x != '0') {
+                    n = 1;
+                }
+            }
+            if (n == 1) {
+                JOptionPane.showMessageDialog(null, "Ingrese un polinomio valido");
             } else {
-                JOptionPane.showMessageDialog(null, "Su archivo esta vacio, por favor ingrese un archivo valido");
-                initPn.setVisible(true);
-                DeteccionPn.setVisible(false);
-                CorreccionPn.setVisible(false);
-                MenuPn.setVisible(false);
+                Brain.AsignarPolinomioGenerador(generador);
+                Identificador = 1;
+                if (Brain.VerificarArchivo(f) == true) {
+                    Brain.GetInfo(f, Identificador);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Su archivo esta vacio, por favor ingrese un archivo valido");
+                    initPn.setVisible(true);
+                    DeteccionPn.setVisible(false);
+                    CorreccionPn.setVisible(false);
+                    MenuPn.setVisible(false);
+                }
             }
         } catch (StringIndexOutOfBoundsException n) { // en caso de que el TextField del generador quede vacío
             JOptionPane.showMessageDialog(null, "No se ha especificado el polinomio generador", "Error", JOptionPane.ERROR_MESSAGE);
@@ -518,6 +546,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void selectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectMouseClicked
         try { //Manejo de excepcion para la recepción en la Detección de errores 
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             JFileChooser chooser = new JFileChooser();
             chooser.showOpenDialog(null);
             fileid3 = chooser.getSelectedFile();
@@ -529,19 +558,54 @@ public class Principal extends javax.swing.JFrame {
             }
         } catch (NullPointerException n) { //si no se selecciona archivo alguno
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_selectMouseClicked
 
     private void recibirCorBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recibirCorBtMouseClicked
-        // TODO add your handling code here:
+        Identificador = 4;
+        Brain.GetInfo(f, Identificador);
     }//GEN-LAST:event_recibirCorBtMouseClicked
 
     private void selectFileCorBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectFileCorBtMouseClicked
-        // TODO add your handling code here:
+        try { //Manejo de excepcion para la recepción en la Detección de errores 
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            JFileChooser chooser = new JFileChooser();
+            chooser.showOpenDialog(null);
+            f = chooser.getSelectedFile();
+            nombreFile = f.getName();
+            String extension = nombreFile.substring(nombreFile.length() - 4, nombreFile.length());
+            if (!extension.contains(".ham")) {
+                JOptionPane.showMessageDialog(null, "Por favor, asegurate de escoger el archivo .ham");
+                f = null;
+            }
+        } catch (NullPointerException n) { //si no se selecciona archivo alguno
+            JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_selectFileCorBtMouseClicked
 
     private void enviarCorBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enviarCorBtMouseClicked
-        // TODO add your handling code here:
+        try { //Manejo de excepcion para la recepción en la Detección de errores 
+            Identificador = 2;
+            Brain.GetInfo(f, Identificador);
+        } catch (NullPointerException n) { //si no se selecciona archivo alguno
+            JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_enviarCorBtMouseClicked
 
     /**

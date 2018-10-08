@@ -22,12 +22,14 @@ public class Brain {
     public static String HexCode;//Codigo Hex del taxto leido.
     public static String Bin;//Codigo Binario del Hex.
     public static ArrayList DataWords;//Datawords de 128bits maximo
+    public static ArrayList DataWordsHam;//Datawords de 128bits maximo
     public static ArrayList lecture;//Datawords de 128bits maximo
     public static String nombreDeSalida;//Nombre del txt de salida.
     //public static String DIV;//Polinomio necesario para codificar. Es un Binario
     public static ArrayList CodeWords;//Lista donde se almacenaran los codewords
     public static String Generador;
     public static String NombreS;
+    public static String Path;
 
     public static void main(String[] args) {
         Principal ventana = new Principal();
@@ -39,10 +41,10 @@ public class Brain {
         FileWriter w;
         BufferedWriter bw;
         PrintWriter wr;
-        Archivo = new File("C:\\ArchivosTxt\\" + nombre + ".crc"); // Crea el archivo en la direccion dada con el nombre escogido
+        Archivo = new File(Path + ".crc"); // Crea el archivo en la direccion dada con el nombre escogido
         if (Archivo.exists()) {
             Archivo.delete();
-            Archivo = new File("C:\\ArchivosTxt\\" + nombre + ".crc");
+            Archivo = new File(Path + ".crc");
         }
         try {
             if (Archivo.createNewFile()) { // Verifica que el archivo se haya creado exitosamente
@@ -66,13 +68,45 @@ public class Brain {
         }
     }
 
+    public static void CreateTxt(ArrayList DataWord, String nombre) {
+        File Archivo;
+        FileWriter w;
+        BufferedWriter bw;
+        PrintWriter wr;
+        nombre = nombre.substring(0, nombre.length() - 4);
+        Archivo = new File(Path + ".ham"); // Crea el archivo en la direccion dada con el nombre escogido
+        if (Archivo.exists()) {
+            Archivo.delete();
+            Archivo = new File(Path + ".ham");
+        }
+        try {
+            if (Archivo.createNewFile()) { // Verifica que el archivo se haya creado exitosamente
+                w = new FileWriter(Archivo); // Se prepara para escribir en el archivo
+                bw = new BufferedWriter(w);
+                wr = new PrintWriter(bw);
+                String dato;
+                for (int i = 0; i < DataWord.size(); i++) {
+                    dato = DataWord.get(i).toString();
+                    wr.write(dato);
+                    wr.write("\r\n");
+                }
+                wr.close();
+                bw.close();
+                System.out.println("Se ha creado exitosamente el archivo salida");
+                JOptionPane.showMessageDialog(null, "Se ha creado exitosamente el archivo .ham");
+            }
+        } catch (IOException e) {
+            System.out.println("Ha habido un error creando el Archivo");
+        }
+    }
+
     public static boolean VerificarArchivo(File f) {
         try {
             String line;
             FileReader fr = new FileReader(f.getAbsolutePath());
             BufferedReader br = new BufferedReader(fr);
             line = br.readLine();
-            if(line == null){
+            if (line == null) {
                 return false;
             }
         } catch (IOException e) {
@@ -99,7 +133,16 @@ public class Brain {
                 //GetHexAndBin(text);
                 GetHexBinDataWords(text);//En esta funcion se hayan los valores hexadecimales y binarios del texto y se guarda en una lista los datawords
             } else if (tipo == 2) {
-                System.out.println("Su CodeWord es: " + text);//Esto es para comprobar
+                GetASCII(text);
+                GetHexBinDataWords2(text);
+                String palabra;
+                DataWordsHam = new ArrayList<>();
+                for (int i = 0; i < DataWords.size(); i++) {
+                    palabra = CodificarHamming(DataWords.get(i).toString());
+                    DataWordsHam.add(palabra);
+                }
+                CreateTxt(DataWordsHam, NombreS);
+                
             } else if (tipo == 3) {
                 String nombre = f.getName();
                 String linea;
@@ -113,6 +156,11 @@ public class Brain {
                 rr.close();
                 hr.close();
                 VerifInfo(lecture, nombre);
+            }else if (tipo == 4){
+                String nombre = f.getName();
+                nombre = nombre.substring(0, nombre.length() - 4);
+                LeerHam(f ,nombre);
+                JOptionPane.showMessageDialog(null, "Se han corregido los errores y se ha creado el archivo txt correspondiente");
             }
             br.close();
             fr.close();
@@ -157,6 +205,43 @@ public class Brain {
             ASCIICode = ASCIICode + Integer.toString((int) characters.charAt(i));
         }
         System.out.println("El codigo ASCII es: " + ASCIICode);
+    }
+
+    public static void GetHexBinDataWords2(String characters) {
+        HexCode = "";//Se "limpia" la variable HexCode donde se va a guardar la traduccion de "text" a su codigo hexadecimal.
+        Bin = "";//Se "limpia" la variable Bin donde se va a guardar la traduccion de los codigos Hexadecimales a Binario. Que es lo que se necesita enviar.
+        String temp = "", as, bs;//Variables necesarias para convertir y agregar caracteres a los Strings.
+        int a, b;
+        DataWords = new ArrayList<>();//Inicializo donde voy a guardar los DataWords.
+        String dataw = "";//Variable donde se guarden los binarios para formar los datawords.
+        for (int i = 0; i < characters.length(); i++) {
+            temp = Integer.toHexString((int) characters.charAt(i));//Se convierte letra por letra a Hexadecimal, que siempre son dos letras. Ej: Letra:k -> Hex:4b
+            HexCode = HexCode + temp;//Se le agrega al string que va a mantener todos los codigos hexadecimales en secuencia.
+            a = Integer.parseInt(Character.toString(temp.charAt(0)), 16);//Se convierte el primer digito del numero hexadecimal a int para porder convertirlo a binario luego. Ej: String:4 -> Int:4
+            b = Integer.parseInt(Character.toString(temp.charAt(1)), 16);//Se convierte el segundo digito a numero. Ej: String:B -> Int:11
+            as = Integer.toBinaryString(a);//Convierte el int a binario. Ej: Int: 4 -> Bin: 100
+            bs = Integer.toBinaryString(b);//Convierte el segundo int a binario. Ej: Int:11 -> Bin:1011
+            while (as.length() < 4) {//Se le agregan los ceros necesario para completar los 4 digitos. Ej: Bin:100 -> String:0100
+                as = "0" + as;
+            }
+            while (bs.length() < 4) {
+                bs = "0" + bs;
+            }
+            Bin = Bin + as + bs;//Se guardan los codigos binarios. Cada caracter son 8 digitos binarios.
+            dataw = dataw + as + bs;//Se le agrega el info al dataword que se esta formando.
+            if (dataw.length() >= 8 || i == characters.length() - 1) {//Cuando el dataword llegue a los 128 digitos o cuando ya no se le vaya a agregar mas info, se agrega a la lista de DataWords.
+                DataWords.add(dataw);
+                System.out.println("datawords: ");
+                System.out.println(dataw);
+                dataw = "";//Se reinicia la variable para grabar en ella los proximos 128 digitos.
+            }
+        }
+        //System.out.println(HexCode);//Para comprobar
+        //System.out.println(Bin);//Para comprobar
+        System.out.println("Deberian haber " + (Bin.length() / 128 + 1) + " Datawords aproximadamente.");//Para comprobar
+        //System.out.println("Lista con tamano: " + DataWords.size());//Para comprobar
+        System.out.println("El ultimo data word es: " + (DataWords.get(DataWords.size() - 1)));//Para comprobar
+
     }
 
     public static void GetHexBinDataWords(String characters) {//Se va conviertiendo el texto leido a hexadecimal y enseguida a binario, para ahorrar tiempo. Y enseguida se van separando las DataWords
@@ -212,6 +297,10 @@ public class Brain {
 
     public static void AsignarNombreSalida(String s) {
         NombreS = s;
+    }
+    
+    public static void AsignarPath(String s){
+        Path = s.substring(0, s.length()-4);
     }
 
     /*  
@@ -362,6 +451,27 @@ public class Brain {
         }
         return text;
     }
+    
+    public static String GetText(ArrayList datos){
+        String a, a1, c, c1;
+        int b, b1;
+        String dato = "";
+        for (int i = 0; i < datos.size(); i++) {
+            dato = dato + datos.get(i).toString();
+        }
+        String text = "";
+        String codeword = dato.substring(0, dato.length());
+        for (int i = 0; i < codeword.length() / 4; i = 2 + i) {
+            a = codeword.substring(4 * i, 4 * (i + 1));
+            a1 = codeword.substring(4 * (i + 1), 4 * (i + 2));
+            b = Integer.parseInt(a, 2);
+            b1 = Integer.parseInt(a1, 2);
+            c = Integer.toHexString(b);
+            c1 = Integer.toHexString(b1);
+            text = text + hexToAscii(c + c1);
+        }
+        return text;
+    }
 
     private static String hexToAscii(String hexStr) {
         StringBuilder output = new StringBuilder("");
@@ -379,10 +489,10 @@ public class Brain {
         FileWriter w;
         BufferedWriter bw;
         PrintWriter wr;
-        Archivo = new File("C:\\ArchivosTxt\\" + nombre + ".txt"); // Crea el archivo en la direccion dada con el nombre escogido
+        Archivo = new File(Path  + ".txt"); // Crea el archivo en la direccion dada con el nombre escogido
         if (Archivo.exists()) {
             Archivo.delete();
-            Archivo = new File("C:\\ArchivosTxt\\" + nombre + ".txt");
+            Archivo = new File(Path + ".txt");
         }
         try {
             if (Archivo.createNewFile()) { // Verifica que el archivo se haya creado exitosamente
@@ -425,9 +535,54 @@ public class Brain {
         b3 = XOR(temp);
         temp = "" + d.charAt(3) + d.charAt(2) + d.charAt(1) + d.charAt(0);
         b4 = XOR(temp);
-        System.out.println("" + b4 + b3 + b2 + b1);
+        //System.out.println("" + b4 + b3 + b2 + b1);
         temp = "" + d.substring(0, 4) + b4 + d.substring(4, 7) + b3 + d.substring(7, 8) + b2 + b1;
         return temp;
     }
 
+    public static String DecodificacionHamming(String d) {
+        char c1, c2, c4, c8;
+        String temp = "" + d.charAt(11) + d.charAt(9) + d.charAt(7) + d.charAt(5) + d.charAt(3) + d.charAt(1);
+        c1 = XOR(temp);
+        temp = "" + d.charAt(10) + d.charAt(9) + d.charAt(6) + d.charAt(5) + d.charAt(2) + d.charAt(1);
+        c2 = XOR(temp);
+        temp = "" + d.charAt(8) + d.charAt(7) + d.charAt(6) + d.charAt(5) + d.charAt(0);
+        c4 = XOR(temp);
+        temp = "" + d.charAt(4) + d.charAt(3) + d.charAt(2) + d.charAt(1) + d.charAt(0);
+        c8 = XOR(temp);
+        temp = "" + c8 + c4 + c2 + c1;
+        if (!temp.equals("0000")) {
+            int pos = Integer.parseInt(temp, 2);
+            pos = d.length() - pos;
+            String iz = d.substring(0, pos);
+            String der = d.substring(pos + 1);
+            char x = d.charAt(pos);
+            if (x == '0') {
+                x = '1';
+            } else {
+                x = '0';
+            }
+            temp = iz + x + der;
+        } else {
+            temp = d;
+        }
+        return temp.substring(0, 4) + temp.substring(5, 8) + temp.substring(9, 10);
+    }
+
+    public static void LeerHam(File f, String nombre){
+        try{
+            String line;
+            FileReader fr = new FileReader(f.getAbsolutePath());
+            BufferedReader br = new BufferedReader(fr);
+            line = br.readLine();
+            DataWordsHam = new ArrayList<>();
+            while(line != null){
+                DataWordsHam.add(DecodificacionHamming(line));
+                line = br.readLine();
+            }
+            CreateTxt(GetText(DataWordsHam),nombre);
+        }catch(Exception e){
+            
+        }
+    }
 }
