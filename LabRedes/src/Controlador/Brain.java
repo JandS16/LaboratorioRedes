@@ -367,6 +367,37 @@ public class Brain {
             System.out.println("Ha habido un error creando el Archivo");
         }
     }
+    
+    public static char XORChar(char a, char b) {
+            if (a==b) {
+                return '0';
+            } else {
+                return '1';
+            }
+    }
+    
+    public static char XOR(String x){//Recibe los bits de los cuales va a sacar el bit de paridad
+        char t =x.charAt(0);
+        for (int i = 1; i < x.length(); i++) {
+            t=XORChar(t,x.charAt(i));
+        }
+        return t;
+    }
+    
+    public static String CodificarHamming(String d){
+        char b1,b2,b3,b4;
+        String temp = ""+d.charAt(7)+d.charAt(6)+d.charAt(4)+d.charAt(3)+d.charAt(1);
+        b1 = XOR(temp);
+        temp = ""+d.charAt(7)+d.charAt(5)+d.charAt(4)+d.charAt(2)+d.charAt(1);
+        b2 = XOR(temp);
+        temp = ""+d.charAt(6)+d.charAt(5)+d.charAt(4)+d.charAt(0);
+        b3 = XOR(temp);
+        temp = ""+d.charAt(3)+d.charAt(2)+d.charAt(1)+d.charAt(0);
+        b4 = XOR(temp);
+        System.out.println(""+b4+b3+b2+b1);
+        temp=""+d.substring(0,4)+b4+d.substring(4,7)+b3+d.substring(7,8)+b2+b1;
+        return temp;
+    }
 
 
 }
