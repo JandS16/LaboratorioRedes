@@ -1,7 +1,9 @@
 package Vista;
 
 import Controlador.Brain;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -11,10 +13,11 @@ import javax.swing.JOptionPane;
  */
 public class Principal extends javax.swing.JFrame {
 
-    int Identificador = 3;
+    int Identificador = -1;
     String generador;
     String nombreFile;
     File f;
+    File fileid3;
 
     /**
      * Creates new form Principal
@@ -65,7 +68,7 @@ public class Principal extends javax.swing.JFrame {
         recepcionDetPn = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         recibirDetBt = new javax.swing.JLabel();
-        selectFileDetBt = new javax.swing.JLabel();
+        select = new javax.swing.JLabel();
         envioDetPn = new javax.swing.JPanel();
         generadorTf = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -103,7 +106,7 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8_Delete_24px_1.png"))); // NOI18N
-        jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel7MouseClicked(evt);
@@ -114,6 +117,7 @@ public class Principal extends javax.swing.JFrame {
         getContentPane().add(HeadPn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 600, 50));
 
         BackgroundPn.setBackground(new java.awt.Color(255, 255, 255));
+        BackgroundPn.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         BackgroundPn.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         initPn.setBackground(new java.awt.Color(255, 255, 255));
@@ -131,7 +135,7 @@ public class Principal extends javax.swing.JFrame {
         continueBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         continueBt.setText("Continuar");
         continueBt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(69, 133, 175), 2));
-        continueBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        continueBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         continueBt.setOpaque(true);
         continueBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -155,7 +159,7 @@ public class Principal extends javax.swing.JFrame {
         selectFileBtn.setForeground(new java.awt.Color(255, 255, 255));
         selectFileBtn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         selectFileBtn.setText("Seleccionar");
-        selectFileBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        selectFileBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         selectFileBtn.setOpaque(true);
         selectFileBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -262,7 +266,7 @@ public class Principal extends javax.swing.JFrame {
         recibirDetBt.setForeground(new java.awt.Color(255, 255, 255));
         recibirDetBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         recibirDetBt.setText("Recibir");
-        recibirDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        recibirDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         recibirDetBt.setOpaque(true);
         recibirDetBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -271,19 +275,19 @@ public class Principal extends javax.swing.JFrame {
         });
         recepcionDetPn.add(recibirDetBt, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 70, 100, -1));
 
-        selectFileDetBt.setBackground(new java.awt.Color(58, 112, 147));
-        selectFileDetBt.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        selectFileDetBt.setForeground(new java.awt.Color(255, 255, 255));
-        selectFileDetBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        selectFileDetBt.setText("Seleccionar");
-        selectFileDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        selectFileDetBt.setOpaque(true);
-        selectFileDetBt.addMouseListener(new java.awt.event.MouseAdapter() {
+        select.setBackground(new java.awt.Color(58, 112, 147));
+        select.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        select.setForeground(new java.awt.Color(255, 255, 255));
+        select.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        select.setText("Seleccionar");
+        select.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        select.setOpaque(true);
+        select.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                selectFileDetBtMouseClicked(evt);
+                selectMouseClicked(evt);
             }
         });
-        recepcionDetPn.add(selectFileDetBt, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 30, 150, -1));
+        recepcionDetPn.add(select, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 30, 150, -1));
 
         DeteccionPn.add(recepcionDetPn, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 340, 100));
 
@@ -306,7 +310,7 @@ public class Principal extends javax.swing.JFrame {
         enviarDetBt.setForeground(new java.awt.Color(255, 255, 255));
         enviarDetBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         enviarDetBt.setText("Enviar");
-        enviarDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        enviarDetBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         enviarDetBt.setOpaque(true);
         enviarDetBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -436,25 +440,31 @@ public class Principal extends javax.swing.JFrame {
             chooser.showOpenDialog(null);
             f = chooser.getSelectedFile();
             nombreFile = f.getName();
-            Brain.AsignarNombreSalida(nombreFile);
-            pathTx.setText(f.getPath());
-            pathCorTx.setText(f.getPath());
-        }catch(NullPointerException n){ //en caso de no haber seleccionado archivo
+            String extension = nombreFile.substring(nombreFile.length() - 4, nombreFile.length());
+            if (!extension.contains(".txt")) {
+                JOptionPane.showMessageDialog(null, "Por favor, asegurate de escoger el archivo .txt");
+                f = null;
+            } else {
+                Brain.AsignarNombreSalida(nombreFile);
+                pathTx.setText(f.getPath());
+                pathCorTx.setText(f.getPath());
+            }
+        } catch (NullPointerException n) { //en caso de no haber seleccionado archivo
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_selectFileBtnMouseClicked
 
     private void continueBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_continueBtMouseClicked
-        try{
+        try {
             if (f == null) {
-                throw new NullPointerException(); 
+                throw new NullPointerException();
             }
             initPn.setVisible(false);
             DeteccionPn.setVisible(false);
             CorreccionPn.setVisible(false);
             MenuPn.setVisible(true);
-        }catch(NullPointerException n){ //en caso de no haber seleccionado archivo
+        } catch (NullPointerException n) { //en caso de no haber seleccionado archivo
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_continueBtMouseClicked
@@ -474,36 +484,53 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_correccionRbFocusGained
 
     private void recibirDetBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recibirDetBtMouseClicked
-//        try{
-//            
-//        }catch(){
-//        
-//        }
-        
+        Identificador = 3;
+        try { //Manejo de excepcion para la recepción en la Detección de errores 
+            if (fileid3 == null) {
+                JOptionPane.showMessageDialog(null, "Asegurese de seleccionar el archivo");
+            } else {
+                Brain.GetInfo(fileid3, Identificador);
+            }
+        } catch (NullPointerException n) { //si no se selecciona archivo alguno
+            JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_recibirDetBtMouseClicked
 
     private void enviarDetBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enviarDetBtMouseClicked
-        try{
+        try {
             generador = generadorTf.getText();
             Brain.AsignarPolinomioGenerador(generador);
             Identificador = 1;
-            Brain.GetInfo(f, Identificador);
-        }catch(StringIndexOutOfBoundsException n){ // en caso de que el TextField del generador quede vacío
+            if (Brain.VerificarArchivo(f) == true) {
+                Brain.GetInfo(f, Identificador);
+            } else {
+                JOptionPane.showMessageDialog(null, "Su archivo esta vacio, por favor ingrese un archivo valido");
+                initPn.setVisible(true);
+                DeteccionPn.setVisible(false);
+                CorreccionPn.setVisible(false);
+                MenuPn.setVisible(false);
+            }
+        } catch (StringIndexOutOfBoundsException n) { // en caso de que el TextField del generador quede vacío
             JOptionPane.showMessageDialog(null, "No se ha especificado el polinomio generador", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_enviarDetBtMouseClicked
 
-    private void selectFileDetBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectFileDetBtMouseClicked
+    private void selectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectMouseClicked
         try { //Manejo de excepcion para la recepción en la Detección de errores 
             JFileChooser chooser = new JFileChooser();
             chooser.showOpenDialog(null);
-            File fi = chooser.getSelectedFile();
-            nombreFile = fi.getName();
-            Brain.AsignarNombreSalida(nombreFile);
-        }catch(NullPointerException n){ //si no se selecciona archivo alguno
+            fileid3 = chooser.getSelectedFile();
+            nombreFile = fileid3.getName();
+            String extension = nombreFile.substring(nombreFile.length() - 4, nombreFile.length());
+            if (!extension.contains(".crc")) {
+                JOptionPane.showMessageDialog(null, "Por favor, asegurate de escoger el archivo .crc");
+                fileid3 = null;
+            }
+        } catch (NullPointerException n) { //si no se selecciona archivo alguno
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_selectFileDetBtMouseClicked
+    }//GEN-LAST:event_selectMouseClicked
 
     private void recibirCorBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recibirCorBtMouseClicked
         // TODO add your handling code here:
@@ -595,8 +622,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel recepcionDetPn;
     private javax.swing.JLabel recibirCorBt;
     private javax.swing.JLabel recibirDetBt;
+    private javax.swing.JLabel select;
     private javax.swing.JLabel selectFileBtn;
     private javax.swing.JLabel selectFileCorBt;
-    private javax.swing.JLabel selectFileDetBt;
     // End of variables declaration//GEN-END:variables
 }

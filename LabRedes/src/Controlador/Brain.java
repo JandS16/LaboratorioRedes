@@ -22,11 +22,13 @@ public class Brain {
     public static String HexCode;//Codigo Hex del taxto leido.
     public static String Bin;//Codigo Binario del Hex.
     public static ArrayList DataWords;//Datawords de 128bits maximo
+    public static ArrayList lecture;//Datawords de 128bits maximo
     public static String nombreDeSalida;//Nombre del txt de salida.
     //public static String DIV;//Polinomio necesario para codificar. Es un Binario
     public static ArrayList CodeWords;//Lista donde se almacenaran los codewords
     public static String Generador;
     public static String NombreS;
+
     public static void main(String[] args) {
         Principal ventana = new Principal();
         ventana.setVisible(true);
@@ -37,7 +39,11 @@ public class Brain {
         FileWriter w;
         BufferedWriter bw;
         PrintWriter wr;
-        Archivo = new File("C:\\ArchivosTxt\\"+nombre+".crc"); // Crea el archivo en la direccion dada con el nombre escogido
+        Archivo = new File("C:\\ArchivosTxt\\" + nombre + ".crc"); // Crea el archivo en la direccion dada con el nombre escogido
+        if (Archivo.exists()) {
+            Archivo.delete();
+            Archivo = new File("C:\\ArchivosTxt\\" + nombre + ".crc");
+        }
         try {
             if (Archivo.createNewFile()) { // Verifica que el archivo se haya creado exitosamente
                 w = new FileWriter(Archivo); // Se prepara para escribir en el archivo
@@ -59,10 +65,26 @@ public class Brain {
             System.out.println("Ha habido un error creando el Archivo");
         }
     }
-    
+
+    public static boolean VerificarArchivo(File f) {
+        try {
+            String line;
+            FileReader fr = new FileReader(f.getAbsolutePath());
+            BufferedReader br = new BufferedReader(fr);
+            line = br.readLine();
+            if(line == null){
+                return false;
+            }
+        } catch (IOException e) {
+            System.out.println("Error");
+        }
+        return true;
+    }
+
     public static void GetInfo(File f, int tipo) { //Se consigue los valores de numregistro, numcampos, ks y tipos
         String line;//Con la que se saca linea por linea  el texto del txt.
         text = "";//Se "limpia" la variable donde todo el texto se va a contener.
+        lecture = new ArrayList<>();
         try {
             FileReader fr = new FileReader(f.getAbsolutePath());
             BufferedReader br = new BufferedReader(fr);
@@ -71,20 +93,61 @@ public class Brain {
                 text = text + line;//Se agrega linea por linea del texto a la variable text. No se tiene ninguna separacion entre lineas.
                 line = br.readLine();
             }
-            br.close();
-            fr.close();
             System.out.println("La información extraida es: " + text);//Esto es para comprobar
             if (tipo == 1) {
                 GetASCII(text);//En esta funcion se le asigna a la variable "ASCIICode" la traduccion de todo "text" a ASCCI
                 //GetHexAndBin(text);
                 GetHexBinDataWords(text);//En esta funcion se hayan los valores hexadecimales y binarios del texto y se guarda en una lista los datawords
-            } else {
+            } else if (tipo == 2) {
                 System.out.println("Su CodeWord es: " + text);//Esto es para comprobar
+            } else if (tipo == 3) {
+                String nombre = f.getName();
+                String linea;
+                FileReader rr = new FileReader(f.getAbsolutePath());
+                BufferedReader hr = new BufferedReader(rr);
+                linea = hr.readLine();
+                while (linea != null) {
+                    lecture.add(linea);
+                    linea = hr.readLine();
+                }
+                rr.close();
+                hr.close();
+                VerifInfo(lecture, nombre);
             }
+            br.close();
+            fr.close();
 
             //Se debe leer DIV antes!
         } catch (IOException e) {
             System.out.println("Error en GetInfo");
+        }
+    }
+
+    public static void VerifInfo(ArrayList codewords, String nombre) {
+        String generador = codewords.get(0).toString();
+        String codeword = "";
+        for (int i = 1; i < codewords.size(); i++) {
+            codeword = codewords.get(i).toString() + codeword;
+        }
+        String ceros = "";
+        for (int i = 0; i < generador.length(); i++) {
+            ceros = ceros + "0";
+        }
+        System.out.println("El generador leido es: " + generador);
+        System.out.println("El codeword completo : " + codeword);
+        System.out.println("Los ceros son: " + ceros);
+        if (HayError(codeword, generador, ceros) == true) {
+            JOptionPane.showMessageDialog(null, "Hay un error en el archivo .crc leido");
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay ningun error en el archivo .crc leido");
+            int n = generador.length() - 1;
+            String texto = "";
+            for (int i = 1; i < codewords.size(); i++) {
+                texto = texto + GetText(codewords.get(i).toString(), n);
+            }
+            nombre = nombre.substring(0, nombre.length() - 4);
+            CreateTxt(texto, nombre);
+            JOptionPane.showMessageDialog(null, "Se ha creado exitosamente el archivo con la decodificacion");
         }
     }
 
@@ -96,43 +159,6 @@ public class Brain {
         System.out.println("El codigo ASCII es: " + ASCIICode);
     }
 
-//    public static void GetHex(String characters) {//Es reemplazado por GetHexAndBin
-//        HexCode = "";
-//        for (int i = 0; i < characters.length(); i++) {
-//            HexCode = HexCode + Integer.toHexString((int) characters.charAt(i));
-//        }
-//        System.out.println(HexCode);
-//    }
-//    public static void GetHexAndBin(String characters) {//Se va conviertiendo el texto leido a hexadecimal y enseguida a binario, para ahorrar tiempo.
-//        HexCode = "";//Se "limpia" la variable HexCode donde se va a guardar la traduccion de "text" a su codigo hexadecimal.
-//        Bin = "";//Se "limpia" la variable Bin donde se va a guardar la traduccion de los codigos Hexadecimales a Binario. Que es lo que se necesita enviar.
-//        String temp = "", as, bs;//Variables necesarias para convertir y agregar caracteres a los Strings.
-//        int a, b;
-//        for (int i = 0; i < characters.length(); i++) {
-//            temp = Integer.toHexString((int) characters.charAt(i));//Se convierte letra por letra a Hexadecimal, que siempre son dos letras. Ej: Letra:k -> Hex:4b
-//            HexCode = HexCode + temp;//Se le agrega al string que va a mantener todos los codigos hexadecimales en secuencia.
-//            a = Integer.parseInt(Character.toString(temp.charAt(0)), 16);//Se convierte el primer digito del numero hexadecimal a int para porder convertirlo a binario luego. Ej: String:4 -> Int:4
-//            b = Integer.parseInt(Character.toString(temp.charAt(1)), 16);//Se convierte el segundo digito a numero. Ej: String:B -> Int:11
-//            as = Integer.toBinaryString(a);//Convierte el int a binario. Ej: Int: 4 -> Bin: 100
-//            bs = Integer.toBinaryString(b);//Convierte el segundo int a binario. Ej: Int:11 -> Bin:1011
-//            while (as.length() < 4) {//Se le agregan los ceros necesario para completar los 4 digitos. Ej: Bin:100 -> String:0100
-//                as = "0" + as;
-//            }
-//            while (bs.length() < 4) {
-//                bs = "0" + bs;
-//            }
-//            Bin = Bin + as + bs;//Se guardan los codigos binarios. Cada caracter son 8 digitos binarios.
-//        }
-//        System.out.println(HexCode);//Para comprobar
-//        System.out.println(Bin);//Para comprobar
-//    }
-//    public static void NameOutput(String s) {//Funcion para nombrar el archivo de salida. No se le esta agregando la extencion txt.
-//        if (s.isEmpty()) {
-//            nombreDeSalida = "salida";
-//        } else {
-//            nombreDeSalida = s;
-//        }
-//    }
     public static void GetHexBinDataWords(String characters) {//Se va conviertiendo el texto leido a hexadecimal y enseguida a binario, para ahorrar tiempo. Y enseguida se van separando las DataWords
 
         HexCode = "";//Se "limpia" la variable HexCode donde se va a guardar la traduccion de "text" a su codigo hexadecimal.
@@ -175,14 +201,15 @@ public class Brain {
         }
         System.out.println("El CodeWord es: " + codeword);
         //JOptionPane.showMessageDialog(null, "El CodeWord generado es: " + codeword);
-        String nombre = NombreS.substring(0, NombreS.length()-4);
-        CreateTxt(Generador, CodeWords,nombre); // Creo el archivo de salida
-        JOptionPane.showMessageDialog(null, "Se ha generado exitosamente el archivo "+nombre+".crc en la misma ruta de su archivo para codificar");
+        String nombre = NombreS.substring(0, NombreS.length() - 4);
+        CreateTxt(Generador, CodeWords, nombre); // Creo el archivo de salida
+        JOptionPane.showMessageDialog(null, "Se ha generado exitosamente el archivo " + nombre + ".crc en la misma ruta de su archivo para codificar");
     }
 
     public static void AsignarPolinomioGenerador(String s) {
         Generador = s;
     }
+
     public static void AsignarNombreSalida(String s) {
         NombreS = s;
     }
@@ -257,7 +284,7 @@ public class Brain {
         }
         return resultado;
     }
-    
+
     public static boolean HayError(String dividendo, String divisor, String ceros) {//Comprueba Si una CodeWord tiene error
         String residuo = dividendo.substring(0, divisor.length());
         for (int i = 0; i <= dividendo.length() - divisor.length(); i++) { //se realiza la division
@@ -297,13 +324,13 @@ public class Brain {
             }
             line = br.readLine();
             String text = "";
-            boolean NoHayError= true;
+            boolean NoHayError = true;
             while (line != null && NoHayError) {
                 if (HayError(line, Generador, ceros)) {
-                    NoHayError=false;
+                    NoHayError = false;
                     System.out.println("Hay un error en el mensaje.");
-                }else{
-                    text=text+GetText(line,Generador.length()-1);                    
+                } else {
+                    text = text + GetText(line, Generador.length() - 1);
                 }
                 line = br.readLine();
             }
@@ -312,7 +339,7 @@ public class Brain {
             if (NoHayError) {
                 System.out.println(text);
                 String nombre = NombreS.substring(0, NombreS.length() - 4);
-                CreateTxt(text,nombre);
+                CreateTxt(text, nombre);
             }
         } catch (IOException e) {
             System.out.println("Error en GetInfo");
@@ -346,13 +373,17 @@ public class Brain {
 
         return output.toString();
     }
-    
+
     public static void CreateTxt(String text, String nombre) { // Le mando el generador, el CodeWord y el nombre del archivo que el usuario escogió
         File Archivo;
         FileWriter w;
         BufferedWriter bw;
         PrintWriter wr;
         Archivo = new File("C:\\ArchivosTxt\\" + nombre + ".txt"); // Crea el archivo en la direccion dada con el nombre escogido
+        if (Archivo.exists()) {
+            Archivo.delete();
+            Archivo = new File("C:\\ArchivosTxt\\" + nombre + ".txt");
+        }
         try {
             if (Archivo.createNewFile()) { // Verifica que el archivo se haya creado exitosamente
                 w = new FileWriter(Archivo); // Se prepara para escribir en el archivo
@@ -367,37 +398,36 @@ public class Brain {
             System.out.println("Ha habido un error creando el Archivo");
         }
     }
-    
+
     public static char XORChar(char a, char b) {
-            if (a==b) {
-                return '0';
-            } else {
-                return '1';
-            }
+        if (a == b) {
+            return '0';
+        } else {
+            return '1';
+        }
     }
-    
-    public static char XOR(String x){//Recibe los bits de los cuales va a sacar el bit de paridad
-        char t =x.charAt(0);
+
+    public static char XOR(String x) {//Recibe los bits de los cuales va a sacar el bit de paridad
+        char t = x.charAt(0);
         for (int i = 1; i < x.length(); i++) {
-            t=XORChar(t,x.charAt(i));
+            t = XORChar(t, x.charAt(i));
         }
         return t;
     }
-    
-    public static String CodificarHamming(String d){
-        char b1,b2,b3,b4;
-        String temp = ""+d.charAt(7)+d.charAt(6)+d.charAt(4)+d.charAt(3)+d.charAt(1);
+
+    public static String CodificarHamming(String d) {
+        char b1, b2, b3, b4;
+        String temp = "" + d.charAt(7) + d.charAt(6) + d.charAt(4) + d.charAt(3) + d.charAt(1);
         b1 = XOR(temp);
-        temp = ""+d.charAt(7)+d.charAt(5)+d.charAt(4)+d.charAt(2)+d.charAt(1);
+        temp = "" + d.charAt(7) + d.charAt(5) + d.charAt(4) + d.charAt(2) + d.charAt(1);
         b2 = XOR(temp);
-        temp = ""+d.charAt(6)+d.charAt(5)+d.charAt(4)+d.charAt(0);
+        temp = "" + d.charAt(6) + d.charAt(5) + d.charAt(4) + d.charAt(0);
         b3 = XOR(temp);
-        temp = ""+d.charAt(3)+d.charAt(2)+d.charAt(1)+d.charAt(0);
+        temp = "" + d.charAt(3) + d.charAt(2) + d.charAt(1) + d.charAt(0);
         b4 = XOR(temp);
-        System.out.println(""+b4+b3+b2+b1);
-        temp=""+d.substring(0,4)+b4+d.substring(4,7)+b3+d.substring(7,8)+b2+b1;
+        System.out.println("" + b4 + b3 + b2 + b1);
+        temp = "" + d.substring(0, 4) + b4 + d.substring(4, 7) + b3 + d.substring(7, 8) + b2 + b1;
         return temp;
     }
-
 
 }
