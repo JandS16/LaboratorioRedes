@@ -16,7 +16,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author Isaac
  */
 public class Principal extends javax.swing.JFrame {
-
+    int x,y;
     int Identificador = -1;
     String generador;
     String nombreFile;
@@ -93,15 +93,25 @@ public class Principal extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(557, 360));
-        setMinimumSize(new java.awt.Dimension(557, 360));
+        setMaximumSize(new java.awt.Dimension(560, 359));
+        setMinimumSize(new java.awt.Dimension(560, 359));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(557, 360));
+        setPreferredSize(new java.awt.Dimension(560, 359));
         setResizable(false);
-        setSize(new java.awt.Dimension(557, 360));
+        setSize(new java.awt.Dimension(560, 359));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         HeadPn.setBackground(new java.awt.Color(58, 112, 147));
+        HeadPn.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                HeadPnMouseDragged(evt);
+            }
+        });
+        HeadPn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                HeadPnMousePressed(evt);
+            }
+        });
         HeadPn.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
@@ -117,7 +127,7 @@ public class Principal extends javax.swing.JFrame {
                 jLabel7MouseClicked(evt);
             }
         });
-        HeadPn.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 0, -1, 20));
+        HeadPn.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 0, -1, 20));
 
         getContentPane().add(HeadPn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 600, 50));
 
@@ -364,7 +374,7 @@ public class Principal extends javax.swing.JFrame {
         recibirCorBt.setForeground(new java.awt.Color(255, 255, 255));
         recibirCorBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         recibirCorBt.setText("Recibir");
-        recibirCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        recibirCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         recibirCorBt.setOpaque(true);
         recibirCorBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -378,7 +388,7 @@ public class Principal extends javax.swing.JFrame {
         selectFileCorBt.setForeground(new java.awt.Color(255, 255, 255));
         selectFileCorBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         selectFileCorBt.setText("Seleccionar");
-        selectFileCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        selectFileCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         selectFileCorBt.setOpaque(true);
         selectFileCorBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -403,7 +413,7 @@ public class Principal extends javax.swing.JFrame {
         enviarCorBt.setForeground(new java.awt.Color(255, 255, 255));
         enviarCorBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         enviarCorBt.setText("Enviar");
-        enviarCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        enviarCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         enviarCorBt.setOpaque(true);
         enviarCorBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -607,6 +617,15 @@ public class Principal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_enviarCorBtMouseClicked
+
+    private void HeadPnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_HeadPnMousePressed
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_HeadPnMousePressed
+
+    private void HeadPnMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_HeadPnMouseDragged
+        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
+    }//GEN-LAST:event_HeadPnMouseDragged
 
     /**
      * @param args the command line arguments

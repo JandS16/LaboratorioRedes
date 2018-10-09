@@ -61,7 +61,6 @@ public class Brain {
                 }
                 wr.close();
                 bw.close();
-                System.out.println("Se ha creado exitosamente el archivo salida");
             }
         } catch (IOException e) {
             System.out.println("Ha habido un error creando el Archivo");
@@ -92,7 +91,6 @@ public class Brain {
                 }
                 wr.close();
                 bw.close();
-                System.out.println("Se ha creado exitosamente el archivo salida");
                 JOptionPane.showMessageDialog(null, "Se ha creado exitosamente el archivo .ham");
             }
         } catch (IOException e) {
@@ -126,8 +124,7 @@ public class Brain {
             while (line != null) {
                 text = text + line;//Se agrega linea por linea del texto a la variable text. No se tiene ninguna separacion entre lineas.
                 line = br.readLine();
-            }
-            System.out.println("La información extraida es: " + text);//Esto es para comprobar
+            }            
             if (tipo == 1) {
                 GetASCII(text);//En esta funcion se le asigna a la variable "ASCIICode" la traduccion de todo "text" a ASCCI
                 //GetHexAndBin(text);
@@ -181,9 +178,7 @@ public class Brain {
         for (int i = 0; i < generador.length(); i++) {
             ceros = ceros + "0";
         }
-        System.out.println("El generador leido es: " + generador);
-        System.out.println("El codeword completo : " + codeword);
-        System.out.println("Los ceros son: " + ceros);
+        
         if (HayError(codeword, generador, ceros) == true) {
             JOptionPane.showMessageDialog(null, "Hay un error en el archivo .crc leido");
         } else {
@@ -204,7 +199,6 @@ public class Brain {
         for (int i = 0; i < characters.length(); i++) {
             ASCIICode = ASCIICode + Integer.toString((int) characters.charAt(i));
         }
-        System.out.println("El codigo ASCII es: " + ASCIICode);
     }
 
     public static void GetHexBinDataWords2(String characters) {
@@ -230,17 +224,10 @@ public class Brain {
             Bin = Bin + as + bs;//Se guardan los codigos binarios. Cada caracter son 8 digitos binarios.
             dataw = dataw + as + bs;//Se le agrega el info al dataword que se esta formando.
             if (dataw.length() >= 8 || i == characters.length() - 1) {//Cuando el dataword llegue a los 128 digitos o cuando ya no se le vaya a agregar mas info, se agrega a la lista de DataWords.
-                DataWords.add(dataw);
-                System.out.println("datawords: ");
-                System.out.println(dataw);
+                DataWords.add(dataw);               
                 dataw = "";//Se reinicia la variable para grabar en ella los proximos 128 digitos.
             }
         }
-        //System.out.println(HexCode);//Para comprobar
-        //System.out.println(Bin);//Para comprobar
-        System.out.println("Deberian haber " + (Bin.length() / 128 + 1) + " Datawords aproximadamente.");//Para comprobar
-        //System.out.println("Lista con tamano: " + DataWords.size());//Para comprobar
-        System.out.println("El ultimo data word es: " + (DataWords.get(DataWords.size() - 1)));//Para comprobar
 
     }
 
@@ -275,16 +262,11 @@ public class Brain {
                 dataw = "";//Se reinicia la variable para grabar en ella los proximos 128 digitos.
             }
         }
-        //System.out.println(HexCode);//Para comprobar
-        //System.out.println(Bin);//Para comprobar
-        System.out.println("Deberian haber " + (Bin.length() / 128 + 1) + " Datawords aproximadamente.");//Para comprobar
-        //System.out.println("Lista con tamano: " + DataWords.size());//Para comprobar
-        System.out.println("El ultimo data word es: " + (DataWords.get(DataWords.size() - 1)));//Para comprobar
+        
         String codeword = "";
         for (int j = 0; j < CodeWords.size(); j++) {
             codeword = codeword + CodeWords.get(j).toString();
         }
-        System.out.println("El CodeWord es: " + codeword);
         //JOptionPane.showMessageDialog(null, "El CodeWord generado es: " + codeword);
         String nombre = NombreS.substring(0, NombreS.length() - 4);
         CreateTxt(Generador, CodeWords, nombre); // Creo el archivo de salida
@@ -315,12 +297,8 @@ public class Brain {
             ceros = ceros + "0";
         }
         dividendo = dividendo + ceros; //se le adicionan los 0's al datawors
-        //System.out.println("Dividendo=" + dividendo);
         ceros = ceros + "0";
-        //System.out.println("Ceros=" + ceros);
-
         dividendo = dataword + Div(dividendo, Generador, ceros); //obtiene el residuo y se le adiciona al dataword para crear el codeword 
-        //System.out.println("Dividendo: " + dividendo);
         return dividendo;
     }
 
@@ -334,22 +312,17 @@ public class Brain {
      */
     public static String Div(String dividendo, String divisor, String ceros) {
         String residuo = dividendo.substring(0, divisor.length()); //se obtienen los primeros k digitos del divisor
-        //System.out.println("Residuo 1: " + residuo);
         for (int i = 0; i <= dividendo.length() - divisor.length(); i++) { //se realiza la division
 
             if (residuo.startsWith("1")) { //si el residuo empieza por 1 el XOR se debe realizar con el divisor, de lo contrario con la cadena de 0's
-                //System.out.println("Entro en 1");
                 residuo = XOR(residuo.substring(1), divisor.substring(1));
-                //System.out.println("Residuo XOR=" + residuo);
             } else {
-                //System.out.println("Entro en 0");
                 residuo = XOR(residuo.substring(1), ceros.substring(1));
-                //System.out.println("Residuo XOR=" + residuo);
+               
             }
             if (i != dividendo.length() - divisor.length()) {
                 residuo = residuo + dividendo.substring(divisor.length() + i, divisor.length() + i + 1); //Baja el siguiente digito para que quede de la misma longitud que el divisor 
             }
-            //System.out.println("Residuo " + i + "=" + residuo);
         }
         return residuo;
     }
@@ -379,23 +352,17 @@ public class Brain {
         for (int i = 0; i <= dividendo.length() - divisor.length(); i++) { //se realiza la division
 
             if (residuo.startsWith("1")) { //si el residuo empieza por 1 el XOR se debe realizar con el divisor, de lo contrario con la cadena de 0's
-                //System.out.println("Entro en 1");
                 residuo = XOR(residuo.substring(1), divisor.substring(1));
-                //System.out.println("Residuo XOR=" + residuo);
             } else {
-                //System.out.println("Entro en 0");
                 residuo = XOR(residuo.substring(1), ceros.substring(1));
-                //System.out.println("Residuo XOR=" + residuo);
             }
             if (i != dividendo.length() - divisor.length()) {
                 residuo = residuo + dividendo.substring(divisor.length() + i, divisor.length() + i + 1); //Baja el siguiente digito para que quede de la misma longitud que el divisor 
             }
         }
-        System.out.println("Residuo: " + residuo);
         if (residuo.equals(ceros.substring(1))) {
             return false;
         } else {
-            System.out.println("Si hubo error");
             return true;
         }
     }
@@ -417,7 +384,6 @@ public class Brain {
             while (line != null && NoHayError) {
                 if (HayError(line, Generador, ceros)) {
                     NoHayError = false;
-                    System.out.println("Hay un error en el mensaje.");
                 } else {
                     text = text + GetText(line, Generador.length() - 1);
                 }
@@ -426,7 +392,6 @@ public class Brain {
             br.close();
             fr.close();
             if (NoHayError) {
-                System.out.println(text);
                 String nombre = NombreS.substring(0, NombreS.length() - 4);
                 CreateTxt(text, nombre);
             }
@@ -502,7 +467,6 @@ public class Brain {
                 wr.write(text);
                 wr.close();
                 bw.close();
-                System.out.println("Se ha creado exitosamente el archivo salida");
             }
         } catch (IOException e) {
             System.out.println("Ha habido un error creando el Archivo");
@@ -535,7 +499,6 @@ public class Brain {
         b3 = XOR(temp);
         temp = "" + d.charAt(3) + d.charAt(2) + d.charAt(1) + d.charAt(0);
         b4 = XOR(temp);
-        //System.out.println("" + b4 + b3 + b2 + b1);
         temp = "" + d.substring(0, 4) + b4 + d.substring(4, 7) + b3 + d.substring(7, 8) + b2 + b1;
         return temp;
     }
