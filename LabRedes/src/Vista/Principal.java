@@ -16,13 +16,14 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author Isaac
  */
 public class Principal extends javax.swing.JFrame {
-    int x,y;
+
     int Identificador = -1;
     String generador;
     String nombreFile;
-    File f;
-    File fileham;
-    File fileid3;
+    File Foption1;
+    File Foption2;
+    File Foption3;
+    File Foption4;
 
     /**
      * Creates new form Principal
@@ -93,25 +94,15 @@ public class Principal extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(560, 359));
-        setMinimumSize(new java.awt.Dimension(560, 359));
+        setMaximumSize(new java.awt.Dimension(557, 360));
+        setMinimumSize(new java.awt.Dimension(557, 360));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(560, 359));
+        setPreferredSize(new java.awt.Dimension(557, 360));
         setResizable(false);
-        setSize(new java.awt.Dimension(560, 359));
+        setSize(new java.awt.Dimension(557, 360));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         HeadPn.setBackground(new java.awt.Color(58, 112, 147));
-        HeadPn.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                HeadPnMouseDragged(evt);
-            }
-        });
-        HeadPn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                HeadPnMousePressed(evt);
-            }
-        });
         HeadPn.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
@@ -127,7 +118,7 @@ public class Principal extends javax.swing.JFrame {
                 jLabel7MouseClicked(evt);
             }
         });
-        HeadPn.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 0, -1, 20));
+        HeadPn.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 0, -1, 20));
 
         getContentPane().add(HeadPn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 600, 50));
 
@@ -157,7 +148,7 @@ public class Principal extends javax.swing.JFrame {
                 continueBtMouseClicked(evt);
             }
         });
-        initPn.add(continueBt, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 150, 120, 20));
+        initPn.add(continueBt, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 150, 110, 20));
 
         jLabel15.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(58, 112, 147));
@@ -374,7 +365,7 @@ public class Principal extends javax.swing.JFrame {
         recibirCorBt.setForeground(new java.awt.Color(255, 255, 255));
         recibirCorBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         recibirCorBt.setText("Recibir");
-        recibirCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        recibirCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         recibirCorBt.setOpaque(true);
         recibirCorBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -388,7 +379,7 @@ public class Principal extends javax.swing.JFrame {
         selectFileCorBt.setForeground(new java.awt.Color(255, 255, 255));
         selectFileCorBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         selectFileCorBt.setText("Seleccionar");
-        selectFileCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        selectFileCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         selectFileCorBt.setOpaque(true);
         selectFileCorBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -413,7 +404,7 @@ public class Principal extends javax.swing.JFrame {
         enviarCorBt.setForeground(new java.awt.Color(255, 255, 255));
         enviarCorBt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         enviarCorBt.setText("Enviar");
-        enviarCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        enviarCorBt.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         enviarCorBt.setOpaque(true);
         enviarCorBt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -454,18 +445,18 @@ public class Principal extends javax.swing.JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             JFileChooser chooser = new JFileChooser();
             chooser.showOpenDialog(null);
-            f = chooser.getSelectedFile();
-            fileham = f;
-            nombreFile = f.getName();
+            Foption1 = chooser.getSelectedFile();
+            nombreFile = Foption1.getName();
             String extension = nombreFile.substring(nombreFile.length() - 4, nombreFile.length());
             if (!extension.contains(".txt")) {
-                JOptionPane.showMessageDialog(null, "Por favor, asegurate de escoger el archivo .txt");
-                f = null;
+                JOptionPane.showMessageDialog(null, "Por favor, asegurate de escoger el archivo .txt","Aviso", JOptionPane.ERROR_MESSAGE);
+                Foption1 = null;
             } else {
+                JOptionPane.showMessageDialog(null, "Se ha cargado su archivo correctamente","Aviso", JOptionPane.WARNING_MESSAGE);
                 Brain.AsignarNombreSalida(nombreFile);
-                Brain.AsignarPath(f.getPath());
-                pathTx.setText(f.getPath());
-                pathCorTx.setText(f.getPath());
+                Brain.AsignarPath(Foption1.getPath());
+                pathTx.setText(Foption1.getPath());
+                pathCorTx.setText(Foption1.getPath());
             }
         } catch (NullPointerException n) { //en caso de no haber seleccionado archivo
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
@@ -483,7 +474,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void continueBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_continueBtMouseClicked
         try {
-            if (f == null) {
+            if (Foption1 == null) {
                 throw new NullPointerException();
             }
             initPn.setVisible(false);
@@ -512,10 +503,10 @@ public class Principal extends javax.swing.JFrame {
     private void recibirDetBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recibirDetBtMouseClicked
         Identificador = 3;
         try { //Manejo de excepcion para la recepción en la Detección de errores 
-            if (fileid3 == null) {
+            if (Foption3 == null) {
                 JOptionPane.showMessageDialog(null, "Asegurese de seleccionar el archivo");
             } else {
-                Brain.GetInfo(fileid3, Identificador);
+                Brain.GetInfo(Foption3, Identificador);
             }
         } catch (NullPointerException n) { //si no se selecciona archivo alguno
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
@@ -539,8 +530,8 @@ public class Principal extends javax.swing.JFrame {
             } else {
                 Brain.AsignarPolinomioGenerador(generador);
                 Identificador = 1;
-                if (Brain.VerificarArchivo(f) == true) {
-                    Brain.GetInfo(f, Identificador);
+                if (Brain.VerificarArchivo(Foption1) == true) {
+                    Brain.GetInfo(Foption1, Identificador);
                 } else {
                     JOptionPane.showMessageDialog(null, "Su archivo esta vacio, por favor ingrese un archivo valido");
                     initPn.setVisible(true);
@@ -559,12 +550,12 @@ public class Principal extends javax.swing.JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             JFileChooser chooser = new JFileChooser();
             chooser.showOpenDialog(null);
-            fileid3 = chooser.getSelectedFile();
-            nombreFile = fileid3.getName();
+            Foption3 = chooser.getSelectedFile();
+            nombreFile = Foption3.getName();
             String extension = nombreFile.substring(nombreFile.length() - 4, nombreFile.length());
             if (!extension.contains(".crc")) {
                 JOptionPane.showMessageDialog(null, "Por favor, asegurate de escoger el archivo .crc");
-                fileid3 = null;
+                Foption3 = null;
             }
         } catch (NullPointerException n) { //si no se selecciona archivo alguno
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
@@ -581,7 +572,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void recibirCorBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recibirCorBtMouseClicked
         Identificador = 4;
-        Brain.GetInfo(f, Identificador);
+        Brain.GetInfo(Foption4, Identificador);
     }//GEN-LAST:event_recibirCorBtMouseClicked
 
     private void selectFileCorBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectFileCorBtMouseClicked
@@ -589,12 +580,12 @@ public class Principal extends javax.swing.JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             JFileChooser chooser = new JFileChooser();
             chooser.showOpenDialog(null);
-            f = chooser.getSelectedFile();
-            nombreFile = f.getName();
+            Foption4 = chooser.getSelectedFile();
+            nombreFile = Foption4.getName();
             String extension = nombreFile.substring(nombreFile.length() - 4, nombreFile.length());
             if (!extension.contains(".ham")) {
                 JOptionPane.showMessageDialog(null, "Por favor, asegurate de escoger el archivo .ham");
-                f = null;
+                Foption4 = null;
             }
         } catch (NullPointerException n) { //si no se selecciona archivo alguno
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
@@ -612,20 +603,11 @@ public class Principal extends javax.swing.JFrame {
     private void enviarCorBtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enviarCorBtMouseClicked
         try { //Manejo de excepcion para la recepción en la Detección de errores 
             Identificador = 2;
-            Brain.GetInfo(f, Identificador);
+            Brain.GetInfo(Foption1, Identificador);
         } catch (NullPointerException n) { //si no se selecciona archivo alguno
             JOptionPane.showMessageDialog(null, "No se ha especificado la ruta del archivo", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_enviarCorBtMouseClicked
-
-    private void HeadPnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_HeadPnMousePressed
-        x = evt.getX();
-        y = evt.getY();
-    }//GEN-LAST:event_HeadPnMousePressed
-
-    private void HeadPnMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_HeadPnMouseDragged
-        this.setLocation(this.getLocation().x + evt.getX() - x, this.getLocation().y + evt.getY() - y);
-    }//GEN-LAST:event_HeadPnMouseDragged
 
     /**
      * @param args the command line arguments
